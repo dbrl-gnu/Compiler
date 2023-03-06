@@ -1,0 +1,5 @@
+package Codi3A;
+
+public enum TipusInstruccionsCTA {
+    COPY, ADD, SUB, PROD, DIV, NEG, AND, OR, NOT, IND_VAL, IND_ASS, SKIP, GOTO,CALL, IFEQ, IFNEQ, IFGT, IFLT, IFGTE, IFLTE, PMB, RTN, OUTT, OUTF, INT, INF, PARAM_S;
+}

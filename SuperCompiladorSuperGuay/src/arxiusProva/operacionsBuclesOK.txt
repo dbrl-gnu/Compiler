@@ -1,0 +1,18 @@
+uwu
+
+void main() {
+	// Declaram l'iterador del bucle i on guardarem el resultat.
+	int iterador = 0;
+	int resultat = 0;
+	// Declaram quan vol sumar l'usuari.
+	int incrementUsuari = 0;
+	ET(incrementUsuari);
+	// Sumara 100 vegades el nombre introduït per l'usuari, si posa 2 retornarà 200.
+	while(iterador < 100) {
+		//Incrementam les variables.
+		iterador = iterador + 1;
+		resultat = incrementUsuari + resultat;
+	}
+	// Abans de sortir mostram el resultat per pantalla.
+	ST(resultat);
+}

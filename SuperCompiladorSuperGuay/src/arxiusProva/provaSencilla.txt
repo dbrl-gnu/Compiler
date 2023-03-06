@@ -1,0 +1,14 @@
+uwu
+int error(boolean bool) {
+    if ((bool)) {
+
+    } else {
+    }
+    return 1;
+}
+
+void main() {
+    boolean bool = true;
+    int x = error(bool);
+    ST(x);
+}

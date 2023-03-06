@@ -1,0 +1,250 @@
+/**
+    primeres passes
+
+ Per compilar aquest fitxer s'ha d'haver instal·lat JavaCup
+
+  java -jar java-cup-11b.jar C:\Users\34601\Desktop\UIB\3r\Compiladors\SuperCompiladorSuperGuay\src\compilador\sintactic\sintactic.cup
+
+alternativament
+
+  java -classpath path_fins_java-cup-11b.jar jav}a_cup.Main prova.cup
+
+**/
+
+package compilador.sintactic;
+import java_cup.runtime.*;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import compilador.Symbols.*;
+import compilador.ts.*;
+import Codi3A.*;
+import compilador.lexic.TokensFile;
+import java_cup.runtime.ComplexSymbolFactory.Location;
+import java_cup.runtime.Symbol;
+
+class Parser;
+
+parser code {:
+
+public TaulaSimbols taulaSimbols = new TaulaSimbols();
+public Generador generador = new Generador();
+
+
+public TokensFile tokensFile = new TokensFile();
+private Scanner scanner;
+public SymbolBegin SB;
+
+public void setScanner(Scanner scanner){
+    this.scanner = scanner;
+}
+
+public int getLinea(){
+return cur_token.left;
+}
+@Override
+public void unrecovered_syntax_error(java_cup.runtime.Symbol cur_token) throws Exception {
+//    report_error("Error sintàctic catastròfic Linea:", cur_token);
+    System.err.println("Linea:"+ (this.cur_token.left+1)+"Error sintàctic catastròfic ");
+    done_parsing();
+    System.exit(1);
+}
+
+@Override
+public void syntax_error(java_cup.runtime.Symbol cur_token) {
+    //report_error("de sintaxis", cur_token);
+}
+
+
+
+:}
+
+scan with {:
+    Symbol n = this.scanner.next_token();
+    tokensFile.addToken(n.toString());
+    return n;
+:}
+/**
+ ** També aquí es poden afegir accions a realitzar quan es requereix un token.
+scan with {:     next_token(); :}
+**/
+
+
+/**
+ * Terminals 
+ */
+terminal    INT, BOOLEAN, IF, ELSE, WHILE, DO, RETURN, LPAR, RPAR;
+terminal    LCOR, RCOR, LBRA, RBRA, COMA, PCOMA, IGUAL, OR, AND, MENOR, MAJOR;
+terminal    NOTEQ, IGUALIGUAL, MAJORIG, MENORIG, SUMA, RESTA, TRUE, FALSE, ID;
+terminal    NUM, PROD, DIV, VOID, UWU, ET, ST, CONST;
+
+/**
+ * Non terminal symbols
+ */
+non terminal SymbolBegin        BEGIN;
+non terminal SymbolLlistDecl    LLISTADECL;
+non terminal SymbolDecl         DECL;
+non terminal SymbolVar          VAR;
+non terminal SymbolAssig        ASSIG;
+non terminal SymbolBuit         BUIT;
+non terminal SymbolFull         FULL;
+non terminal SymbolTVar         TVAR;
+non terminal SymbolExpResp      EXPRESP;
+non terminal SymbolOResp        ORESP;
+non terminal SymbolExpAri       EXPARI;
+non terminal SymbolOAri         OARI;
+non terminal SymbolOpernd       OPERND;
+non terminal SymbolExpLo        EXPLO;
+non terminal SymbolExpAnd       EXPAND;
+non terminal SymbolCapVoid      CAPVOID;
+non terminal SymbolArgs         ARGS;
+non terminal SymbolCapFull_1    CAPFULL_1;
+non terminal SymbolCapFull_2    CAPFULL_2;
+non terminal SymbolRetu         RETU;
+non terminal SymbolCos          COS;
+non terminal SymbolInstR        INSTR;
+non terminal SymbolInstIf       INSTIF;
+non terminal SymbolInstIf2      INSTIF2;
+non terminal SymbolInstWhile    INSTWHILE;
+non terminal SymbolInstDoWhile  INSTDOWHILE;
+non terminal SymbolCridada      CRIDADA;
+non terminal SymbolArgCrid      ARGCRID;
+non terminal SymbolIo           IO;
+non terminal SymbolTIo          TIO;
+non terminal SymbolArray        ARRAY;
+non terminal M1                 M1;
+
+start with BEGIN;
+
+BEGIN ::= UWU LLISTADECL:v1  {:SB = new SymbolBegin(this.parser,v1,cur_token.left); :}
+    |                    {: :}
+    ;
+
+LLISTADECL ::= LLISTADECL:v1 DECL:v2 {: RESULT = new SymbolLlistDecl(this.parser,v1,v2,cur_token.left); :}
+    |   DECL:v1 {:RESULT = new SymbolLlistDecl(this.parser,v1,cur_token.left); :}
+    ;
+
+DECL ::= VAR:v1 {:RESULT = new SymbolDecl(this.parser,v1,cur_token.left); :}
+    | ASSIG:v1  {:RESULT = new SymbolDecl(this.parser,v1,cur_token.left); :}
+    | BUIT:v1 {:RESULT = new SymbolDecl(this.parser,v1,cur_token.left); :}
+    | FULL:v1    {:RESULT = new SymbolDecl(this.parser,v1,cur_token.left); :}
+    ;
+
+VAR ::= TVAR:v1 ARRAY:v2 IGUAL EXPRESP:v3 PCOMA {:RESULT = new SymbolVar(this.parser,v1,v2,v3,cur_token.left); :}
+    | CONST TVAR:v1 ARRAY:v2 IGUAL EXPRESP:v3 PCOMA {:RESULT = new SymbolVar(this.parser,v1,v2,v3,cur_token.left, 0); :}
+    ;
+
+TVAR ::= INT:v  {: RESULT = new SymbolTVar(this.parser,"int",cur_token.left); :}
+    | BOOLEAN:v  {: RESULT = new SymbolTVar(this.parser,"boolean",cur_token.left); :}
+    ;
+
+EXPRESP ::= EXPRESP:v1 ORESP:v2 EXPARI:v3{:RESULT = new SymbolExpResp(this.parser,v1,v2,v3,cur_token.left); :}
+    | EXPARI:v1    {:RESULT = new SymbolExpResp(this.parser,v1,cur_token.left); :}
+    ;
+
+ORESP ::= MENOR:v {: RESULT = new SymbolOResp(this.parser,"<",cur_token.left); :}
+    |MAJOR:v {: RESULT = new SymbolOResp(this.parser,">",cur_token.left); :}
+    |NOTEQ:v {: RESULT = new SymbolOResp(this.parser,"!=",cur_token.left); :}
+    |IGUALIGUAL:v {: RESULT = new SymbolOResp(this.parser,"==",cur_token.left); :}
+    |MAJORIG:v {: RESULT = new SymbolOResp(this.parser,">=",cur_token.left); :}
+    |MENORIG:v {: RESULT = new SymbolOResp(this.parser,"<=",cur_token.left); :}
+    ;
+
+EXPARI ::= EXPARI:v1 OARI:v2 OPERND:v3 {: RESULT = new SymbolExpAri(this.parser,v1,v2,v3,cur_token.left); :}
+    |OPERND:v1 {: RESULT = new SymbolExpAri(this.parser,v1,cur_token.left); :}
+    ;
+
+OARI ::= SUMA:v {: RESULT = new SymbolOAri(this.parser,"+",cur_token.left); :}
+    |RESTA:v {: RESULT = new SymbolOAri(this.parser,"-",cur_token.left); :}
+    |PROD:v {: RESULT = new SymbolOAri(this.parser,"*",cur_token.left); :}
+    |DIV:v {: RESULT = new SymbolOAri(this.parser,"/",cur_token.left); :}
+    ;
+
+OPERND ::= ARRAY:v1 {: RESULT = new SymbolOpernd(this.parser,v1,cur_token.left); :}
+    |NUM:v {: RESULT = new SymbolOpernd(this.parser,(Integer)v,cur_token.left); :}
+    |TRUE:v {: RESULT = new SymbolOpernd(this.parser,(String)v,1,cur_token.left); :}
+    |FALSE:v {: RESULT = new SymbolOpernd(this.parser,(String)v,2,cur_token.left); :}
+    |RESTA:v OPERND:v1 {: RESULT = new SymbolOpernd(this.parser,"-",v1,cur_token.left); :}
+    |LPAR EXPLO:v1 RPAR {: RESULT = new SymbolOpernd(this.parser,v1,cur_token.left); :}
+    |CRIDADA:v1 {: RESULT = new SymbolOpernd(this.parser,v1,cur_token.left); :}
+    ;
+
+ARRAY ::= ARRAY:v1 LBRA EXPARI:v2 RBRA {: RESULT = new SymbolArray(this.parser,v1,v2,cur_token.left); :}
+    | ID:v {: RESULT = new SymbolArray(this.parser,(String)v,cur_token.left); :}
+    ;
+
+EXPLO ::= EXPLO:v1 OR:v EXPAND:v2 {: RESULT = new SymbolExpLo(this.parser,v1,"||",v2,cur_token.left); :}
+    |EXPAND:v1 {: RESULT = new SymbolExpLo(this.parser,v1,cur_token.left); :}
+    ;
+
+EXPAND ::= EXPAND:v1 AND:v EXPRESP:v2 {: RESULT = new SymbolExpAnd(this.parser,v1,"&&",v2,cur_token.left); :}
+    |EXPRESP:v1 {: RESULT = new SymbolExpAnd(this.parser,v1,cur_token.left); :}
+    ;
+
+ASSIG ::= ARRAY:v1 IGUAL EXPRESP:v2 PCOMA {:RESULT = new SymbolAssig(this.parser,v1,v2,cur_token.left); :}
+    ;
+
+BUIT ::= CAPVOID:v1 LCOR COS:v2 RCOR {:RESULT = new SymbolBuit(this.parser,v1,v2,cur_token.left); :}
+    ;
+
+CAPVOID ::= VOID CAPFULL_2:v1 {:RESULT = new SymbolCapVoid(this.parser,v1,cur_token.left); :}
+    ;
+
+ARGS ::= TVAR:v1 ARRAY:v2 {:RESULT = new SymbolArgs(this.parser,v1,v2,cur_token.left); :}
+    |ARGS:v1 COMA TVAR:v2 ARRAY:v3 {:RESULT = new SymbolArgs(this.parser,v1,v2,v3,cur_token.left); :}
+    ;
+
+FULL ::= CAPFULL_1:v1 LCOR COS:v2 RETU :v3 PCOMA RCOR {:RESULT = new SymbolFull(this.parser,v1,v2,v3,cur_token.left); :}
+    ;
+
+CAPFULL_1 ::= TVAR:v1 CAPFULL_2:v2 {:RESULT = new SymbolCapFull_1(this.parser,v1,v2,cur_token.left); :}
+    ;
+
+CAPFULL_2 ::= ID:v1 LPAR RPAR {:RESULT = new SymbolCapFull_2(this.parser,(String)v1,cur_token.left); :}
+    |ID:v2 LPAR ARGS:v1 RPAR {:RESULT = new SymbolCapFull_2(this.parser,v1,(String)v2,cur_token.left); :}
+    ;
+
+RETU ::= RETURN EXPRESP:v1 {:RESULT = new SymbolRetu(this.parser,v1,cur_token.left); :}
+    ;
+
+COS ::= INSTR:v1 COS:v2 {:RESULT = new SymbolCos(this.parser,v1,v2,cur_token.left); :}
+    |VAR:v1 COS:v2 {:RESULT = new SymbolCos(this.parser,v1,v2,cur_token.left); :}
+    |ASSIG:v1 COS:v2 {:RESULT = new SymbolCos(this.parser,v1,v2,cur_token.left); :}
+    |               {:RESULT = new SymbolCos(this.parser,cur_token.left); :}
+    ;
+
+INSTR ::= INSTIF:v1 {:RESULT = new SymbolInstR(this.parser,v1,cur_token.left); :}
+    | INSTWHILE:v1 {:RESULT = new SymbolInstR(this.parser,v1,cur_token.left); :}
+    | INSTDOWHILE:v1 {:RESULT = new SymbolInstR(this.parser,v1,cur_token.left); :}
+    | CRIDADA:v1 PCOMA{:RESULT = new SymbolInstR(this.parser,v1,cur_token.left); :}
+    | IO:v1 PCOMA {:RESULT = new SymbolInstR(this.parser,v1,cur_token.left); :}
+    ;
+
+INSTIF ::= IF LPAR EXPLO:v1 RPAR LCOR M1:v4 COS:v2 RCOR INSTIF2:v3 M1 {:RESULT = new SymbolInstIf(this.parser,v1,v2,v3,v4,cur_token.left); :}
+    ;
+
+INSTIF2 ::= ELSE LCOR COS:v1 RCOR {:RESULT = new SymbolInstIf2(this.parser,v1,cur_token.left); :}
+    |                             {:RESULT = new SymbolInstIf2(this.parser,cur_token.left); :}
+    ;
+
+INSTWHILE ::= WHILE LPAR M1:v3 EXPLO:v1 RPAR LCOR COS:v2 RCOR M1 {:RESULT = new SymbolInstWhile(this.parser,v1,v2,v3,cur_token.left); :}
+    ;
+
+INSTDOWHILE ::= DO LCOR M1:v3 COS:v1 RCOR WHILE LPAR EXPLO:v2 RPAR M1 PCOMA {:RESULT = new SymbolInstDoWhile(this.parser,v1,v2,v3,cur_token.left); :}
+    ;
+
+CRIDADA ::= ID:v1 LPAR RPAR {:RESULT = new SymbolCridada(this.parser,(String)v1,cur_token.left); :}
+    |ID:v1 LPAR ARGCRID:v2 RPAR {:RESULT = new SymbolCridada(this.parser,(String)v1,v2,cur_token.left); :}
+    ;
+
+ARGCRID ::= ARGCRID:v1 COMA OPERND:v2 {:RESULT = new SymbolArgCrid(this.parser,v1,v2,cur_token.left); :}
+    |OPERND:v1 {:RESULT = new SymbolArgCrid(this.parser,v1,cur_token.left); :}
+    ;
+
+IO ::= TIO:v1 LPAR OPERND:v2 RPAR {:RESULT = new SymbolIo(this.parser,v1,v2,cur_token.left); :}
+    ;
+
+TIO ::= ET:v {:RESULT = new SymbolTIo(this.parser, "ET",cur_token.left); :}
+    | ST:v {:RESULT = new SymbolTIo(this.parser, "ST",cur_token.left); :}
+    ;
+
+M1 ::={:RESULT = new M1(this.parser,cur_token.left); :}
+    ;

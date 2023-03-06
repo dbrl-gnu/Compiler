@@ -1,0 +1,25 @@
+uwu
+
+// Funcio void que mostra per pantalla el valor de paràmetre.
+int printResult(int entr, int aotr) {
+
+        /*[PMB]
+        DEFINIR > entr DS.W 1        
+        */
+
+	// Operacio sortida per teclat.
+	ST(entr);
+	ST(aotr);
+	return 1;
+}
+
+// Deifinició del main del nostre programa.
+void main() {
+	// Variable emprada per l'entrada per teclat d'usuari.
+	int a = 0;
+	ET(a);
+	// Calculam el doble del valor entrat per consola.
+	a = a * 2;
+	// Mostram per pantalla el resultat calculat.
+	int x = printResult(a,25);
+}

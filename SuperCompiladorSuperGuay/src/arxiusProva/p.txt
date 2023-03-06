@@ -1,0 +1,13 @@
+uwu
+
+int x = 2;
+
+void test(int x2) {
+    x = x2;
+    ST(x);
+}
+
+void main() {
+    test(1);
+    test2(0);
+}

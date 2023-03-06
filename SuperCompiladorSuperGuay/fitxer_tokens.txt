@@ -1,0 +1,6 @@
+Symbol: ID
+Symbol: ID
+Symbol: NUM
+Symbol: ID
+Symbol: ID
+Symbol: NUM

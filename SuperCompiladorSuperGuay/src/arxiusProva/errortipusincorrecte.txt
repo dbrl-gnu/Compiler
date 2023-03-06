@@ -1,0 +1,8 @@
+uwu
+
+void main() {
+    boolean bool = true;
+    int x = bool; // no es pot assignar un boolea a un int
+    ST(x);
+}
+

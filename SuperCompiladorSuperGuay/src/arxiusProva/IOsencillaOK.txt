@@ -1,0 +1,12 @@
+uwu
+
+// Deifinició del main del nostre programa.
+void main() {
+	// Variable emprada per l'entrada per teclat d'usuari.
+	int a = 0;
+	ET(a);
+	// Calculam el doble del valor entrat per consola.
+	a = a * 2;
+	// Mostram per pantalla el resultat calculat.
+	ST(a);
+}

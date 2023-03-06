@@ -1,0 +1,11 @@
+uwu
+
+void hola() {
+    while(true){
+    ST(1010);
+}
+                // Falta un claudator dret } 
+void main() {
+    hola();
+}
+

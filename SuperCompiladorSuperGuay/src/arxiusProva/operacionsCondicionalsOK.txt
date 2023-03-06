@@ -1,0 +1,55 @@
+// Simbol inicial del nostre llenguatge.
+uwu
+
+// Declaram el cos principal del programa.
+void main() {
+
+// Declaracio de variables.
+int x = 2;
+int y = 3;
+int z = 4;
+
+boolean result = 0;
+
+// Operacio condicional '>', ha de retornar False (0 en ensablador).
+if(x > y) {
+   result = true;
+} else {
+   result = false;
+}
+// Mostram per pantalla el valor de result en boolea.
+ST(result);
+
+// Operacio condicional '<', ha de retornar True (-1 en ensablador).
+if(x < y) {
+   result = true;
+} else {
+   result = false;
+}
+
+// Mostram per pantalla el valor de result en boolea.
+ST(result);
+
+// Operació condicional sense emprar variables, ha d'entrar al cos de l'if.
+if(2+3 == 5) {
+   // Mostrara true a la pantalla d'ensamblador, és a dir, -1.
+   ST(true);
+}
+
+// Operació condicional composta emprant una suma de variables. hauria de retornar 10.
+if(x + z >= y) {
+   ST(10);
+} else {
+   ST(-3);
+}
+
+}
+
+/*
+RESULTAT PER PANTALLA FINAL: 
+	0
+	-1
+	-1
+	10
+Podem comprovar que l'execució del programa és correcta.
+ */

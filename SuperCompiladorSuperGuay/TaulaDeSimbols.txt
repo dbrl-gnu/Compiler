@@ -1,0 +1,4 @@
+TAULA DE SIMBOLS: 
+Taula de descripció:
+ID: main / Descripcio: - Procediment: nProcediment = 0 | tRet = NULL / Nivell profunditat declarat: 0 / Next: -1 / NPO : 0
+Taula d'expansió:
